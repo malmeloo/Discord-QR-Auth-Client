@@ -53,7 +53,8 @@ class DiscordAuthWebsocket:
                                          on_open=self.on_open,
                                          on_message=self.on_message,
                                          on_error=self.on_error,
-                                         on_close=self.on_close)
+                                         on_close=self.on_close,
+                                         header={'Origin': 'https://discord.com'})
 
         self.key = RSA.generate(2048)
         self.cipher = PKCS1_OAEP.new(self.key, hashAlgo=SHA256)
