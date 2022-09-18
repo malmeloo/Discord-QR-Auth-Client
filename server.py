@@ -16,7 +16,7 @@ class Messages:
     INIT = 'init'
     NONCE_PROOF = 'nonce_proof'
     PENDING_REMOTE_INIT = 'pending_remote_init'
-    PENDING_FINISH = 'pending_ticket'
+    PENDING_TICKET = 'pending_ticket'
     FINISH = 'finish'
 
 
@@ -141,7 +141,7 @@ class DiscordAuthWebsocket:
 
             print('Please scan the QR code to continue.')
 
-        elif op == Messages.PENDING_FINISH:
+        elif op == Messages.PENDING_TICKET:
             encrypted_payload = data.get('encrypted_user_payload')
             payload = self.decrypt_payload(encrypted_payload)
 
