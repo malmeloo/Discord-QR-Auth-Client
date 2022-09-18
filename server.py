@@ -49,7 +49,7 @@ class DiscordUser:
 class DiscordAuthWebsocket:
     def __init__(self, debug=False):
         self.debug = debug
-        self.ws = websocket.WebSocketApp('wss://remote-auth-gateway.discord.gg/?v=1',
+        self.ws = websocket.WebSocketApp('wss://remote-auth-gateway.discord.gg/?v=2',
                                          on_open=self.on_open,
                                          on_message=self.on_message,
                                          on_error=self.on_error,
