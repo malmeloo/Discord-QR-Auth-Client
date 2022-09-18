@@ -16,7 +16,7 @@ class Messages:
     INIT = 'init'
     NONCE_PROOF = 'nonce_proof'
     PENDING_REMOTE_INIT = 'pending_remote_init'
-    PENDING_FINISH = 'pending_finish'
+    PENDING_FINISH = 'pending_ticket'
     FINISH = 'finish'
 
 
