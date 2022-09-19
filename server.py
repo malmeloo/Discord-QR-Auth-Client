@@ -181,7 +181,7 @@ class DiscordAuthWebsocket:
 
 
 if __name__ == '__main__':
-    auth_ws = DiscordAuthWebsocket(debug=True)
+    auth_ws = DiscordAuthWebsocket(debug=False)
     auth_ws.run()
 
     answer = input('Save to info.txt? [Y/n] > ')
