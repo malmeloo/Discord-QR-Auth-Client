@@ -98,7 +98,7 @@ class DiscordAuthWebsocket:
 
     def exchange_ticket(self, ticket):
         print(f'Exch ticket: {ticket}')
-        r = httpx.post(self.LOGIN_ENDPOINT, data={'ticket': ticket})
+        r = httpx.post(self.LOGIN_ENDPOINT, json={'ticket': ticket})
         if not r.status_code == 200:
             return None
 
