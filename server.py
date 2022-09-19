@@ -116,10 +116,10 @@ class DiscordAuthWebsocket:
 
         img.show(title='Discord QR Code')
 
-    def on_open(self):
+    def on_open(self, ws):
         pass
 
-    def on_message(self, message):
+    def on_message(self, ws, message):
         if self.debug:
             print(f'Recv: {message}')
 
@@ -172,12 +172,12 @@ class DiscordAuthWebsocket:
 
             self.ws.close()
 
-    def on_error(self, error):
+    def on_error(self, ws, error):
         print(error)
 
-    def on_close(self):
+    def on_close(self, ws, status_code, msg):
         print('----------------------')
-        print('Connection closed.')
+        print(f'Connection closed: {msg}')
 
 
 if __name__ == '__main__':
