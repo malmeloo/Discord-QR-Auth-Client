@@ -5,6 +5,7 @@ import time
 
 import qrcode
 import websocket
+import httpx
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
@@ -16,8 +17,8 @@ class Messages:
     INIT = 'init'
     NONCE_PROOF = 'nonce_proof'
     PENDING_REMOTE_INIT = 'pending_remote_init'
-    PENDING_FINISH = 'pending_finish'
-    FINISH = 'finish'
+    PENDING_TICKET = 'pending_ticket'
+    PENDING_LOGIN = 'pending_login'
 
 
 class DiscordUser:
@@ -47,9 +48,12 @@ class DiscordUser:
 
 
 class DiscordAuthWebsocket:
+    WS_ENDPOINT = 'wss://remote-auth-gateway.discord.gg/?v=2'
+    LOGIN_ENDPOINT = 'https://discord.com/api/v9/users/@me/remote-auth/login'
+
     def __init__(self, debug=False):
         self.debug = debug
-        self.ws = websocket.WebSocketApp('wss://remote-auth-gateway.discord.gg/?v=1',
+        self.ws = websocket.WebSocketApp(self.WS_ENDPOINT,
                                          on_open=self.on_open,
                                          on_message=self.on_message,
                                          on_error=self.on_error,
@@ -91,6 +95,14 @@ class DiscordAuthWebsocket:
         if self.debug:
             print(f'Send: {payload}')
         self.ws.send(json.dumps(payload))
+
+    def exchange_ticket(self, ticket):
+        print(f'Exch ticket: {ticket}')
+        r = httpx.post(self.LOGIN_ENDPOINT, json={'ticket': ticket})
+        if not r.status_code == 200:
+            return None
+
+        return r.json().get('encrypted_token')
 
     def decrypt_payload(self, encrypted_payload):
         payload = base64.b64decode(encrypted_payload)
@@ -141,14 +153,15 @@ class DiscordAuthWebsocket:
 
             print('Please scan the QR code to continue.')
 
-        elif op == Messages.PENDING_FINISH:
+        elif op == Messages.PENDING_TICKET:
             encrypted_payload = data.get('encrypted_user_payload')
             payload = self.decrypt_payload(encrypted_payload)
 
             self.user = DiscordUser.from_payload(payload.decode())
 
-        elif op == Messages.FINISH:
-            encrypted_token = data.get('encrypted_token')
+        elif op == Messages.PENDING_LOGIN:
+            ticket = data.get('ticket')
+            encrypted_token = self.exchange_ticket(ticket)
             token = self.decrypt_payload(encrypted_token)
 
             if self.qr_image is not None:
@@ -168,7 +181,7 @@ class DiscordAuthWebsocket:
 
 
 if __name__ == '__main__':
-    auth_ws = DiscordAuthWebsocket(debug=False)
+    auth_ws = DiscordAuthWebsocket(debug=True)
     auth_ws.run()
 
     answer = input('Save to info.txt? [Y/n] > ')
