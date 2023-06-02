@@ -1,5 +1,5 @@
 websocket_client~=1.5.2
-pycryptodome~=3.17
+pycryptodome~=3.18
 qrcode[pil]~=7.4
 httpx~=0.24.1
 
