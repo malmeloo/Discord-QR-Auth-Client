@@ -3,12 +3,14 @@ import json
 import threading
 import time
 
+import httpx
 import qrcode
 import websocket
-import httpx
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
+
+DEBUG = False
 
 
 class Messages:
@@ -81,7 +83,10 @@ class DiscordAuthWebsocket:
             current_time = time.time()
             time_passed = current_time - self.last_heartbeat + 1  # add a second to be on the safe side
             if time_passed >= self.heartbeat_interval:
-                self.send(Messages.HEARTBEAT)
+                try:
+                    self.send(Messages.HEARTBEAT)
+                except websocket.WebSocketConnectionClosedException:
+                    return
                 self.last_heartbeat = current_time
 
     def run(self):
@@ -181,7 +186,7 @@ class DiscordAuthWebsocket:
 
 
 if __name__ == '__main__':
-    auth_ws = DiscordAuthWebsocket(debug=False)
+    auth_ws = DiscordAuthWebsocket(debug=DEBUG)
     auth_ws.run()
 
     answer = input('Save to info.txt? [Y/n] > ')

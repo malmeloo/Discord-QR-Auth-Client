@@ -10,7 +10,7 @@ Prerequisites:
 
 Optional:
 * Uncomment `numpy` and `wsaccel` in requirements.txt for slightly better performance (you really don't need to do this)
-* Enable debug mode by modifying `debug=False` in server.py
+* Enable debug mode by modifying `DEBUG = False` in server.py
 
 ### Steps
 1. `python3 -m pip install -U -r requirements.txt`
