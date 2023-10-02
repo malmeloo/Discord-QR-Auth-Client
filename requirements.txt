@@ -1,7 +1,7 @@
 websocket_client~=1.6.2
 pycryptodome~=3.19
 qrcode[pil]~=7.4
-httpx~=0.24.1
+httpx~=0.25.0
 
 # ------ uncomment for better performance
 # numpy==1.18.1
